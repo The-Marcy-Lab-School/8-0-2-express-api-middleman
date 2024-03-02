@@ -1,8 +1,20 @@
 # Express as a Safe API Middleman
 
-Serving static assets is a core functionality of a server application. The second use case for a server is to perform 3rd-party API requests that require an API key in a manner that protects the developer's API key.
+Serving static assets is a core functionality of a server application. 
+
+The second use case for a server is to perform 3rd-party API requests that require an API key in a manner that protects the developer's API key.
 
 Let's do it!
+
+- [Terms](#terms)
+- [Frontend Request Proxy](#frontend-request-proxy)
+- [API Keys](#api-keys)
+- [Environment Variables](#environment-variables)
+  - [Server Side Code](#server-side-code)
+  - [Client Side Code](#client-side-code)
+- [Extracting Query Params](#extracting-query-params)
+- [Challenge](#challenge)
+
 
 ## Terms
 
