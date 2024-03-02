@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import fetchData from './utils/fetchData';
 
+// We do NOT want to expose this information like this
 const API_KEY = 'paste_here_from_giphy_API';
 const API_URL = `https://api.giphy.com/v1/gifs/trending?api_key=${API_KEY}&limit=3&rating=g`;
 
@@ -9,8 +10,9 @@ function App() {
 
   useEffect(() => {
     const doFetch = async () => {
+      const API_URL = `/api/gifs`;
       try {
-        const [data, error] = await fetchData(`/api/gifs`);
+        const [data, error] = await fetchData(API_URL);
         if (data) setGifs(data.data);
       } catch (error) {
         console.log(error.message)
