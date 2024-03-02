@@ -203,8 +203,15 @@ export default defineConfig({
 
 ## Challenge
 
-[follow these steps to Deploy a no-database server application using Render](https://github.com/The-Marcy-Lab-School/render-deployment-instructions).
+Once you've completed the changes in this repo, push up your changes. By default, the `frontend/dist` folder is ignored by git (see the `.gitignore` file) so you will need to run:
 
+```
+git add frontend/dist -f
+```
+
+And then commit and push to upload your built frontend.
+
+Then, [follow these steps to Deploy a no-database server application using Render](https://github.com/The-Marcy-Lab-School/render-deployment-instructions). During the creation process, there will be a chance for you to add the `API_KEY` environment variable.
 
 **Bonus Challenge:** Open your `7-0-2` assignment. It should be complete.
 * Create a `server` folder and `cd` into it
