@@ -9,11 +9,12 @@ Let's do it!
 - [Terms](#terms)
 - [Setup](#setup)
 - [API Keys](#api-keys)
-  - [Make API Requests from the Server](#make-api-requests-from-the-server)
+  - [Why We Make API Requests from the Server](#why-we-make-api-requests-from-the-server)
 - [Environment Variables](#environment-variables)
 - [Making an API request from the frontend](#making-an-api-request-from-the-frontend)
 - [Development Frontend Request Proxy (if time)](#development-frontend-request-proxy-if-time)
-- [Challenge](#challenge)
+  - [Two Version of the Frontend](#two-version-of-the-frontend)
+  - [Proxy Requests](#proxy-requests)
 
 ## Terms
 
@@ -53,10 +54,9 @@ Then:
 > The API key is a way to verify your identity as a developer. Some APIs will charge you for each request that you make using your API key and if someone else gets a hold of your API key, they could steal your request resources.
 </details><br>
 
-### Make API Requests from the Server
+### Why We Make API Requests from the Server
 
-If we want to avoid making our API keys public, we need to be careful with how we use them in our code. **Our frontend can't safely make requests using the API key** —  anyone using our deployed application can just look at the Network tab to see the API keys in the request URL.
-
+If we want to avoid making our API keys public, we need to be careful with how we use them in our code. **Our frontend can't safely make requests using the API key** — anyone using our deployed application can just look at the Network tab to see the API keys in the request URL.
 
 **So, we have to make the requests using the API keys in our backend.** 
 
@@ -124,15 +124,15 @@ Instead of sending the fetch request to the Giphy API, the frontend should send 
 
 ![](./images/express-api-middleman.svg)
 
-Normally when sending requests to 3rd-party APIs, we include the full URL: `http://someapi.com/endpoint`. These kinds of requests are **cross-origin** requests. Our server can safely do this.
+Normally when sending requests to 3rd-party APIs, we include the full URL: `http://someapi.com/endpoint`. These kinds of requests are **cross-origin** requests because the origin (`http://someapi.com`) is different from the origin of our server (`http://localhost` or wherever the app is deployed). Our server can safely do this but as we've seen, our front-ends should not.
 
-However, in this case, we are sending a **same-origin** request — the origin of the request is the same as the origin of the response. 
+However, we want to send a **same-origin** request — the origin of the request is the same as the origin of the response (we got the frontend application from the same server that we are now requesting data from).
 
-Remember, we got the frontend application from the same server that we are now requesting this data from.
-
-So, our request URL can be: `/api/gifs`. When we leave the host out of the URL, our browser will assume the request is a same-origin request.
+So, our request URL will be: `/api/gifs`. When we leave the host out of the URL, our browser will assume the request is a same-origin request.
 
 ```js
+// The App component
+
 useEffect(() => {
   const doFetch = async () => {
     const API_URL = `/api/gifs`;
@@ -148,17 +148,23 @@ useEffect(() => {
 ```
 
 To test this out we should:
-* Run `npm run build` to update our frontend application's `dist` folder.
-* Run the server which will serve our updated frontend.
-* Visit http://localhost:8080 to see the gifs!
+* Re-run `npm run build` to re-build our frontend application's static assets in the `dist/` folder.
+* Re-run the server which will serve our updated frontend static assets.
+* Visit the server http://localhost:8080 to see the updated frontend!
 
 ## Development Frontend Request Proxy (if time)
 
 > *tldr: copy and paste the code snippet below into your `vite.config.js` file to make your development frontend application play nicely with your server and avoid cross-origin resource sharing (CORS) issues.*
 
+
+### Two Version of the Frontend
+
 We could totally stop here and everything would be great. We can now build server applications that provide frontends that utilize 3rd-party APIs without exposing API keys by utilizing environment variables!
 
 However, we need to remember that we have two different versions of our frontend:
+
+1. The development version (which lives in the `frontend/src` folder)
+2. The built "production/distribution" version (which lives in the `frontend/dist` folder)
 
 **<details><summary style="color: purple">Q: Which version does the server serve?</summary>**
 > The built "production/distribution" version in the `frontend/dist` folder! 
@@ -166,9 +172,9 @@ However, we need to remember that we have two different versions of our frontend
 > Remember, the server can only serve static assets. The development version is not "static" because it contains dynamic JSX React code. It must be compiled into plain JS first.
 </details><br>
 
-1. The development version (which lives in the `frontend/src` folder)
-2. The built "production/distribution" version (which lives in the `frontend/dist` folder)
-> This is where things may get confusing... Bear with me...
+### Proxy Requests
+
+This is where things may get confusing... Bear with me...
   
 In that last step, we tested the frontend changes by running `npm run build` to update our frontend `dist` folder, and by opening the static frontend application served by our backend at http://localhost:8080.
 
@@ -199,34 +205,3 @@ export default defineConfig({
   },
 });
 ```
-
-
-## Challenge
-
-Once you've completed the changes in this repo, push up your changes. By default, the `frontend/dist` folder is ignored by git (see the `.gitignore` file) so you will need to run:
-
-```
-git add frontend/dist -f
-```
-
-And then commit and push to upload your built frontend.
-
-Then, [follow these steps to Deploy a no-database server application using Render](https://github.com/The-Marcy-Lab-School/render-deployment-instructions). During the creation process, there will be a chance for you to add the `API_KEY` environment variable.
-
-**Bonus Challenge:** Open your `7-0-2` assignment. It should be complete.
-* Create a `server` folder and `cd` into it
-* Run `npm i express dotenv`
-* Add a `.gitignore` file with `node_modules/` and `.env`
-* Create a `.env` file and store your Giphy API key inside
-* Create an `index.js` file and create a simple Express server application. It should:
-  * Import environment variables from `.env` using `dotenv`
-  * Serve static assets from `giphy-search/dist` folder
-  * Have a `/api/gifs` endpoint that can fetch from the Giphy API using your API key
-* Update the frontend React application such that it sends requests to the server
-  * Don't forget to update the `vite.config.js` file to enable proxy requests.
-* Add a search endpoint to your server, letting the frontend send search GET requests to the backend using query parameters.
-
-  * When the user submits the search form with the term `"fox"`, the frontend should send a request to `/api/gifs?search=fox`.
-  * When the server receives this request, it should look at the `req.query` object to find the `search` value and then make a request to the Giphy API's search endpoint.
-
-https://stackoverflow.com/questions/30967822/when-do-i-use-path-params-vs-query-params-in-a-restful-api
