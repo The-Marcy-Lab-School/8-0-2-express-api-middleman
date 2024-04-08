@@ -1,7 +1,15 @@
+/////////////////////
+// Imports
+/////////////////////
+
 require('dotenv').config(); // Import the environment variables from the `.env` file
 const express = require('express');
 const path = require('path');
 const fetchData = require('./utils/fetchData');
+
+/////////////////////
+// Setup
+/////////////////////
 
 const pathToDistFolder = path.join(__dirname, '..', 'frontend-final', 'dist');
 
