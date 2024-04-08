@@ -1,9 +1,16 @@
+/////////////////////
+// Imports
+/////////////////////
+
 const express = require('express');
 const path = require('path');
 const fetchData = require('./utils/fetchData');
 
-const pathToDistFolder = path.join(__dirname, '..', 'frontend', 'dist');
+/////////////////////
+// Setup
+/////////////////////
 
+const pathToDistFolder = path.join(__dirname, '..', 'frontend', 'dist');
 const app = express();
 
 /////////////////////
