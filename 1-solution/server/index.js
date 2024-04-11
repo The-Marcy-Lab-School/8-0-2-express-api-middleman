@@ -11,7 +11,7 @@ const fetchData = require('./utils/fetchData');
 // Setup
 /////////////////////
 
-const pathToDistFolder = path.join(__dirname, '..', 'frontend-final', 'dist');
+const pathToDistFolder = path.join(__dirname, '../frontend/dist');
 
 const app = express();
 
