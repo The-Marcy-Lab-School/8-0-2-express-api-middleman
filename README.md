@@ -96,7 +96,7 @@ console.log(process.env.API_KEY); // abc123
 
 // and then make a controller
 
-const serveGifs = (req, res, send) => {
+const serveGifs = async (req, res, send) => {
   const API_URL = `https://api.giphy.com/v1/gifs/trending?api_key=${process.env.API_KEY}&limit=3&rating=g`;
   try {
     const [data, error] = await fetchData(API_URL);
